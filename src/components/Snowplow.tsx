@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from "react";
+import React, { FC, useEffect, useCallback, useLayoutEffect } from "react";
 import {
   newTracker,
   addGlobalContexts,
@@ -38,7 +38,7 @@ export const SnowplowProvider: FC<SnowplowProviderProps> = ({
   collectors,
   children,
 }) => {
-  useEffect(() => {
+  useLayoutEffect(() => {
     collectors.forEach((collector) => {
       newTracker(collector.name, collector.endpoint, {
         appId,
@@ -70,4 +70,49 @@ export const SnowplowProvider: FC<SnowplowProviderProps> = ({
       {children}
     </SnowplowContext.Provider>
   );
+};
+
+type InteractionType =
+  | "click"
+  | "scroll"
+  | "change"
+  | "status_change"
+  | "focus"
+  | "change"
+  | "submit";
+
+export const useTrackPageView = () => {
+  const context = React.useContext(SnowplowContext);
+  if (context === undefined) {
+    throw new Error(
+      "`useTrackPageView` hook must be used within a `SnowplowContext` component"
+    );
+  }
+  const trackPageView = () => context.trackPageView();
+  return useCallback(trackPageView, [context]);
+};
+
+export const useTrackInteraction = () => {
+  const context = React.useContext(SnowplowContext);
+  if (context === undefined) {
+    throw new Error(
+      "`useTrackInteraction` hook must be used within a `SnowplowContext` component"
+    );
+  }
+
+  const trackInteraction = (
+    type: InteractionType,
+    object?: string,
+    value?: string
+  ) =>
+    context.trackSelfDescribingEvent(
+      "iglu:com.snowplowanalytics.plg/interaction/jsonschema/1-0-0",
+      {
+        type,
+        object,
+        value,
+      }
+    );
+
+  return useCallback(trackInteraction, [context]);
 };

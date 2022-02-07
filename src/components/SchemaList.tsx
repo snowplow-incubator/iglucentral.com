@@ -2,12 +2,14 @@ import { Link, TextField, Typography, Button } from "@mui/material";
 import { Box } from "@mui/system";
 import { FC, useState } from "react";
 import { Schema } from "../data/types";
+import { useTrackInteraction } from "./Snowplow";
 
 type SchemaItemProps = {
   schema: Schema;
 };
 
 const SchemaItem: FC<SchemaItemProps> = ({ schema }) => {
+  const trackInteraction = useTrackInteraction();
   return (
     <Box
       sx={{
@@ -23,6 +25,9 @@ const SchemaItem: FC<SchemaItemProps> = ({ schema }) => {
         sx={{ wordWrap: "break-word", overflowWrap: "break-word" }}
         href={`https://github.com/snowplow/iglu-central/tree/master/schemas/${schema.name}/${schema.type}/${schema.version}`}
         target={"_blank"}
+        onClick={() =>
+          trackInteraction("click", "link", `${schema.name}-github`)
+        }
       >
         {schema.name}
       </Link>
@@ -39,6 +44,7 @@ type SchemaListProps = {
 const SchemaList: FC<SchemaListProps> = ({ schemas }) => {
   const [filter, setFilter] = useState("");
   const [renderCount, setRenderCount] = useState(21);
+  const trackInteraction = useTrackInteraction();
   const renderedSchemas = schemas.filter((s) =>
     filter.length === 0
       ? true
@@ -74,6 +80,7 @@ const SchemaList: FC<SchemaListProps> = ({ schemas }) => {
         >
           <TextField
             value={filter}
+            onFocus={() => trackInteraction("focus", "textbox", "search")}
             onChange={(e) => setFilter(e.target.value)}
             sx={{
               width: "100%",
@@ -118,7 +125,10 @@ const SchemaList: FC<SchemaListProps> = ({ schemas }) => {
         <Box sx={{ paddingTop: 2, display: "flex", justifyContent: "center" }}>
           <Button
             variant={"contained"}
-            onClick={() => setRenderCount(renderCount + 21)}
+            onClick={() => {
+              trackInteraction("click", "button", "view-more");
+              setRenderCount(renderCount + 21);
+            }}
           >
             View more
           </Button>
