@@ -1,8 +1,15 @@
 import { Box, Link, Typography } from "@mui/material";
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import Logo from "./Logo";
+import { useTrackInteraction, useTrackPageView } from "./Snowplow";
 
 const Page: FC = ({ children }) => {
+  const trackPageView = useTrackPageView();
+  const trackInteraction = useTrackInteraction();
+  useEffect(() => {
+    trackPageView();
+  }, [trackPageView]);
+
   return (
     <Box
       sx={{
@@ -58,6 +65,9 @@ const Page: FC = ({ children }) => {
                 sx={{ color: (t) => t.palette.common.white }}
                 target={"_blank"}
                 href={"https://docs.snowplowanalytics.com"}
+                onClick={() =>
+                  trackInteraction("click", "link", "snowplow-docs")
+                }
               >
                 Docs
               </Link>{" "}
@@ -65,6 +75,9 @@ const Page: FC = ({ children }) => {
               <Link
                 sx={{ color: (t) => t.palette.common.white }}
                 href={"https://github.com/snowplow"}
+                onClick={() =>
+                  trackInteraction("click", "link", "snowplow-github")
+                }
                 target={"_blank"}
               >
                 Github

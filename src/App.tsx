@@ -4,9 +4,9 @@ import { Collector, SnowplowProvider } from "./components/Snowplow";
 import SchemasPage from "./containers/SchemasPage";
 
 const collector: Collector = {
-  name: "collector",
-  endpoint: "",
-  cookieName: ".",
+  name: "ops1",
+  endpoint: "collector.snowplowanalytics.com",
+  cookieName: "_sp5_",
 };
 
 const App = () => {
