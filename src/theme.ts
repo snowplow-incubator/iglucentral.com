@@ -15,29 +15,33 @@ const theme = createTheme({
     },
   },
   typography: {
-    fontFamily: "Rubik, sans-serif",
     h1: {
+      fontFamily: '"Rubik", sans-serif',
       fontSize: "32px",
       fontWeight: fontWeight.normal,
     },
     h2: {
-      fontSize: "24px",
+      fontFamily: '"Rubik", sans-serif',
+      fontSize: "28px",
       fontWeight: fontWeight.normal,
     },
     h3: {
-      fontSize: "20px",
+      fontFamily: '"Rubik", sans-serif',
+      fontSize: "24px",
       letterSpacing: "0px",
-      lineHeight: "28px",
+      lineHeight: "24px",
       fontWeight: fontWeight.normal,
     },
     h4: {
-      fontSize: "18px",
+      fontFamily: '"Rubik", sans-serif',
+      fontSize: "20px",
       fontWeight: fontWeight.bold,
       letterSpacing: "0px",
-      lineHeight: "24px",
+      lineHeight: "20px",
     },
     h5: {
-      fontSize: "16px",
+      fontFamily: '"Rubik", sans-serif',
+      fontSize: "18px",
       fontWeight: fontWeight.bold,
     },
     body1: {
@@ -46,7 +50,15 @@ const theme = createTheme({
       letterSpacing: "0px",
       lineHeight: "24px",
     },
+    body2: {
+      fontFamily: '"Roboto", sans-serif',
+      fontSize: "14px",
+      fontWeight: fontWeight.normal,
+      lineHeight: "20px",
+    },
     subtitle1: {
+      fontFamily: '"Rubik", sans-serif',
+      fontSize: "14px",
       fontWeight: fontWeight.bold,
     },
   },

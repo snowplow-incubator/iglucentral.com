@@ -34,8 +34,10 @@ const SchemaItem: FC<SchemaItemProps> = ({ schema }) => {
       >
         {schema.name}
       </Link>
-      <Typography variant={"subtitle1"}>Version</Typography>
-      <Typography gutterBottom>{schema.version}</Typography>
+      <Box sx={{ marginTop: 1 }}>
+        <Typography variant={"subtitle1"}>Version</Typography>
+        <Typography gutterBottom>{schema.version}</Typography>
+      </Box>
     </Box>
   );
 };
@@ -127,6 +129,7 @@ const SchemaList: FC<SchemaListProps> = ({ schemas }) => {
       {renderedSchemas.length > renderCount && (
         <Box sx={{ paddingTop: 2, display: "flex", justifyContent: "center" }}>
           <Button
+            size="large"
             variant={"contained"}
             onClick={() => {
               trackInteraction("click", "button", "view-more");
