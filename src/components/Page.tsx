@@ -49,9 +49,15 @@ const Page: FC = ({ children }) => {
             justifyContent: "space-between",
           }}
         >
-          <Typography variant="h1">
-            <Logo />
-          </Typography>
+          <Link
+            target={"_blank"}
+            href="https://snowplowanalytics.com"
+            onClick={() => trackInteraction("click", "link", "snowplow-home")}
+          >
+            <Typography variant="h1">
+              <Logo />
+            </Typography>
+          </Link>
           <Box
             sx={{
               display: {
