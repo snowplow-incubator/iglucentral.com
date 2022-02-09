@@ -8,6 +8,9 @@ type SchemaItemProps = {
   schema: Schema;
 };
 
+const DEFAULT_NUMBER_TO_RENDER = 99;
+const PAGE_SIZE = 66;
+
 const SchemaItem: FC<SchemaItemProps> = ({ schema }) => {
   const trackInteraction = useTrackInteraction();
   return (
@@ -43,7 +46,7 @@ type SchemaListProps = {
 
 const SchemaList: FC<SchemaListProps> = ({ schemas }) => {
   const [filter, setFilter] = useState("");
-  const [renderCount, setRenderCount] = useState(21);
+  const [renderCount, setRenderCount] = useState(DEFAULT_NUMBER_TO_RENDER);
   const trackInteraction = useTrackInteraction();
   const renderedSchemas = schemas.filter((s) =>
     filter.length === 0
@@ -127,7 +130,7 @@ const SchemaList: FC<SchemaListProps> = ({ schemas }) => {
             variant={"contained"}
             onClick={() => {
               trackInteraction("click", "button", "view-more");
-              setRenderCount(renderCount + 21);
+              setRenderCount(renderCount + PAGE_SIZE);
             }}
           >
             View more
