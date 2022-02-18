@@ -3,7 +3,6 @@ on:
   push:
     branches:
       - main
-      - feature/add-gh-action
 jobs:
   build:
     runs-on: ubuntu-latest
