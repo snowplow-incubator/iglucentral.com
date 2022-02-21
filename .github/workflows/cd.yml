@@ -1,8 +1,8 @@
-name: build and deploy
+name: build and publish
 on:
   push:
-    branches:
-      - main
+    tags:
+      - "*"
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -32,9 +32,11 @@ jobs:
       - name: Build
         shell: bash
         run: npm run build
-      - name: Upload assets
-        uses: actions/upload-artifact@v2
+      - name: Zip Folder
+        run: zip -r release.zip ./build
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
         with:
-          name: build-dir
-          path: build/
-          if-no-files-found: error
+          files: |
+            release.zip
