@@ -42,7 +42,6 @@ export const SnowplowProvider: FC<SnowplowProviderProps> = ({
     collectors.forEach((collector) => {
       newTracker(collector.name, collector.endpoint, {
         appId,
-        cookieDomain: ".snowplowanalytics.com",
         cookieName: collector.cookieName,
       });
     });
