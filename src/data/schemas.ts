@@ -10,7 +10,9 @@ export const getSchemas = async () => {
       .replace("iglu:", "")
       .split("/");
     const schema: Schema = {
-      name: `${vendor}/${name}`,
+      fullName: `${vendor}/${name}`,
+      name,
+      vendor,
       type,
       version,
     };

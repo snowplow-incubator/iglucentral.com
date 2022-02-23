@@ -1,46 +1,18 @@
-import { Link, TextField, Typography, Button } from "@mui/material";
-import { Box } from "@mui/system";
+import {
+  Box,
+  TextField,
+  Typography,
+  Button,
+  Table,
+  TableBody,
+} from "@mui/material";
 import { FC, useState } from "react";
 import { Schema } from "../data/types";
 import { useTrackInteraction } from "./Snowplow";
+import SchemaRow, { SchemaHeaderRow } from "./SchemaRow";
 
-type SchemaItemProps = {
-  schema: Schema;
-};
-
-const DEFAULT_NUMBER_TO_RENDER = 99;
-const PAGE_SIZE = 66;
-
-const SchemaItem: FC<SchemaItemProps> = ({ schema }) => {
-  const trackInteraction = useTrackInteraction();
-  return (
-    <Box
-      sx={{
-        padding: "8px",
-        backgroundColor: "#fff",
-        borderRadius: "4px",
-        overflow: "hidden",
-        maxWidth: "100%",
-      }}
-    >
-      <Typography variant={"subtitle1"}>Name</Typography>
-      <Link
-        sx={{ wordWrap: "break-word", overflowWrap: "break-word" }}
-        href={`https://github.com/snowplow/iglu-central/tree/master/schemas/${schema.name}/${schema.type}/${schema.version}`}
-        target={"_blank"}
-        onClick={() =>
-          trackInteraction("click", "link", `${schema.name}-github`)
-        }
-      >
-        {schema.name}
-      </Link>
-      <Box sx={{ marginTop: 1 }}>
-        <Typography variant={"subtitle1"}>Version</Typography>
-        <Typography gutterBottom>{schema.version}</Typography>
-      </Box>
-    </Box>
-  );
-};
+const DEFAULT_NUMBER_TO_RENDER = 50;
+const PAGE_SIZE = 50;
 
 type SchemaListProps = {
   schemas: Schema[];
@@ -53,7 +25,7 @@ const SchemaList: FC<SchemaListProps> = ({ schemas }) => {
   const renderedSchemas = schemas.filter((s) =>
     filter.length === 0
       ? true
-      : s.name.toLowerCase().includes(filter.toLowerCase())
+      : s.fullName.toLowerCase().includes(filter.toLowerCase())
   );
 
   return (
@@ -71,6 +43,8 @@ const SchemaList: FC<SchemaListProps> = ({ schemas }) => {
           },
           alignItems: "center",
           marginBottom: 4,
+          paddingX: 1,
+          paddingY: 3,
         }}
       >
         <Box
@@ -91,7 +65,6 @@ const SchemaList: FC<SchemaListProps> = ({ schemas }) => {
               width: "100%",
               backgroundColor: (theme) => theme.palette.common.white,
             }}
-            id="outlined-basic"
             label="Search for a schema"
             variant="outlined"
           />
@@ -109,22 +82,36 @@ const SchemaList: FC<SchemaListProps> = ({ schemas }) => {
           {renderedSchemas.length} schemas
         </Typography>
       </Box>
-      <Box
+      <Table
         sx={{
-          display: "grid",
-          gridTemplateColumns: {
-            md: "1fr",
-            lg: "1fr 1fr",
-            xl: "1fr 1fr 1fr",
+          maxWidth: "100%",
+          overflow: "hidden",
+          display: {
+            xs: "block",
+            lg: "revert",
           },
-          columnGap: 3,
-          rowGap: 3,
         }}
       >
-        {renderedSchemas.slice(0, renderCount).map((s) => (
-          <SchemaItem key={`${s.name}${s.version}`} schema={s} />
-        ))}
-      </Box>
+        <SchemaHeaderRow />
+        <TableBody
+          sx={{
+            "&>tr:nth-of-type(odd)": {
+              backgroundColor: {
+                xs: "#F0EBF8",
+                lg: "revert",
+              },
+            },
+            display: {
+              xs: "block",
+              lg: "revert",
+            },
+          }}
+        >
+          {renderedSchemas.slice(0, renderCount).map((s) => (
+            <SchemaRow key={`${s.fullName}${s.version}`} schema={s} />
+          ))}
+        </TableBody>
+      </Table>
 
       {renderedSchemas.length > renderCount && (
         <Box sx={{ paddingTop: 2, display: "flex", justifyContent: "center" }}>
