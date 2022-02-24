@@ -129,8 +129,24 @@ const SchemaList: FC<SchemaListProps> = ({ schemas }) => {
         </Typography>
       </Box>
 
-      <MemoizedSchemaTable schemas={slicedSchemas} />
-
+      <Box
+        sx={{
+          backgroundColor: {
+            lg: "white",
+          },
+          padding: {
+            lg: 3,
+          },
+          borderRadius: {
+            lg: "4px",
+          },
+          boxShadow: {
+            lg: "0px 0px 2px 0px rgb(0 0 0 / 16%)",
+          },
+        }}
+      >
+        <MemoizedSchemaTable schemas={slicedSchemas} />
+      </Box>
       {filteredSchemas.length > renderCount && (
         <Box
           sx={{
