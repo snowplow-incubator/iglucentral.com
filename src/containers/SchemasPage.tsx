@@ -18,7 +18,13 @@ const SchemasPage = () => {
   return (
     <Page>
       {!schemas ? (
-        <Box sx={{ display: "flex", justifyContent: "center" }}>
+        <Box
+          sx={{
+            marginTop: 10,
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
           <Loader />
         </Box>
       ) : (

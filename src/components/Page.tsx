@@ -97,10 +97,6 @@ const Page: FC = ({ children }) => {
         sx={{
           gridArea: "content",
           boxShadow: "inset 2px 2px 2px 0px rgba(0, 0, 0, 0.16)",
-          padding: {
-            xs: 1,
-            md: 4,
-          },
         }}
       >
         <Box

@@ -1,59 +1,77 @@
-import { Link, TextField, Typography, Button } from "@mui/material";
-import { Box } from "@mui/system";
-import { FC, useState } from "react";
+import {
+  Box,
+  TextField,
+  Typography,
+  Button,
+  Table,
+  TableBody,
+} from "@mui/material";
+import { FC, useMemo, useState, memo } from "react";
 import { Schema } from "../data/types";
 import { useTrackInteraction } from "./Snowplow";
+import SchemaRow, { SchemaHeaderRow } from "./SchemaRow";
+import { useDebounce } from "use-debounce";
 
-type SchemaItemProps = {
-  schema: Schema;
-};
+const DEFAULT_NUMBER_TO_RENDER = 50;
+const PAGE_SIZE = 50;
 
-const DEFAULT_NUMBER_TO_RENDER = 99;
-const PAGE_SIZE = 66;
-
-const SchemaItem: FC<SchemaItemProps> = ({ schema }) => {
-  const trackInteraction = useTrackInteraction();
-  return (
-    <Box
+const SchemaTable: FC<{ schemas: Schema[] }> = ({ schemas }) => (
+  <Table
+    sx={{
+      maxWidth: "100%",
+      overflow: "hidden",
+      display: {
+        xs: "block",
+        lg: "revert",
+      },
+    }}
+  >
+    <SchemaHeaderRow />
+    <TableBody
       sx={{
-        padding: "8px",
-        backgroundColor: "#fff",
-        borderRadius: "4px",
-        overflow: "hidden",
-        maxWidth: "100%",
+        "&>tr:nth-of-type(odd)": {
+          backgroundColor: {
+            xs: "#F0EBF8",
+            lg: "revert",
+          },
+        },
+        display: {
+          xs: "block",
+          lg: "revert",
+        },
       }}
     >
-      <Typography variant={"subtitle1"}>Name</Typography>
-      <Link
-        sx={{ wordWrap: "break-word", overflowWrap: "break-word" }}
-        href={`https://github.com/snowplow/iglu-central/tree/master/schemas/${schema.name}/${schema.type}/${schema.version}`}
-        target={"_blank"}
-        onClick={() =>
-          trackInteraction("click", "link", `${schema.name}-github`)
-        }
-      >
-        {schema.name}
-      </Link>
-      <Box sx={{ marginTop: 1 }}>
-        <Typography variant={"subtitle1"}>Version</Typography>
-        <Typography gutterBottom>{schema.version}</Typography>
-      </Box>
-    </Box>
-  );
-};
+      {schemas.map((s) => (
+        <SchemaRow key={`${s.fullName}${s.version}`} schema={s} />
+      ))}
+    </TableBody>
+  </Table>
+);
+
+const MemoizedSchemaTable = memo(SchemaTable);
 
 type SchemaListProps = {
   schemas: Schema[];
 };
-
 const SchemaList: FC<SchemaListProps> = ({ schemas }) => {
-  const [filter, setFilter] = useState("");
+  const [filterText, setFilterText] = useState("");
+  const [filter] = useDebounce(filterText, 200);
   const [renderCount, setRenderCount] = useState(DEFAULT_NUMBER_TO_RENDER);
   const trackInteraction = useTrackInteraction();
-  const renderedSchemas = schemas.filter((s) =>
-    filter.length === 0
-      ? true
-      : s.name.toLowerCase().includes(filter.toLowerCase())
+
+  const filteredSchemas = useMemo(
+    () =>
+      schemas.filter((s) =>
+        filter.length === 0
+          ? true
+          : s.fullName.toLowerCase().includes(filter.toLowerCase())
+      ),
+    [filter, schemas]
+  );
+
+  const slicedSchemas = useMemo(
+    () => filteredSchemas.slice(0, renderCount),
+    [filteredSchemas, renderCount]
   );
 
   return (
@@ -71,6 +89,8 @@ const SchemaList: FC<SchemaListProps> = ({ schemas }) => {
           },
           alignItems: "center",
           marginBottom: 4,
+          paddingX: 1,
+          paddingY: 3,
         }}
       >
         <Box
@@ -84,14 +104,13 @@ const SchemaList: FC<SchemaListProps> = ({ schemas }) => {
           }}
         >
           <TextField
-            value={filter}
+            value={filterText}
             onFocus={() => trackInteraction("focus", "textbox", "search")}
-            onChange={(e) => setFilter(e.target.value)}
+            onChange={(e) => setFilterText(e.target.value)}
             sx={{
               width: "100%",
               backgroundColor: (theme) => theme.palette.common.white,
             }}
-            id="outlined-basic"
             label="Search for a schema"
             variant="outlined"
           />
@@ -105,29 +124,38 @@ const SchemaList: FC<SchemaListProps> = ({ schemas }) => {
             },
           }}
         >
-          Showing {Math.min(renderCount, renderedSchemas.length)} of{" "}
-          {renderedSchemas.length} schemas
+          Showing {Math.min(renderCount, filteredSchemas.length)} of{" "}
+          {filteredSchemas.length} schemas
         </Typography>
       </Box>
+
       <Box
         sx={{
-          display: "grid",
-          gridTemplateColumns: {
-            md: "1fr",
-            lg: "1fr 1fr",
-            xl: "1fr 1fr 1fr",
+          backgroundColor: {
+            lg: "white",
           },
-          columnGap: 3,
-          rowGap: 3,
+          padding: {
+            lg: 3,
+          },
+          borderRadius: {
+            lg: "4px",
+          },
+          boxShadow: {
+            lg: "0px 0px 2px 0px rgb(0 0 0 / 16%)",
+          },
         }}
       >
-        {renderedSchemas.slice(0, renderCount).map((s) => (
-          <SchemaItem key={`${s.name}${s.version}`} schema={s} />
-        ))}
+        <MemoizedSchemaTable schemas={slicedSchemas} />
       </Box>
-
-      {renderedSchemas.length > renderCount && (
-        <Box sx={{ paddingTop: 2, display: "flex", justifyContent: "center" }}>
+      {filteredSchemas.length > renderCount && (
+        <Box
+          sx={{
+            marginBottom: 2,
+            paddingTop: 2,
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
           <Button
             size="large"
             variant={"contained"}
