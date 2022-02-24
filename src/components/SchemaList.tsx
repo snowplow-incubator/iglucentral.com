@@ -6,26 +6,72 @@ import {
   Table,
   TableBody,
 } from "@mui/material";
-import { FC, useState } from "react";
+import { FC, useMemo, useState, memo } from "react";
 import { Schema } from "../data/types";
 import { useTrackInteraction } from "./Snowplow";
 import SchemaRow, { SchemaHeaderRow } from "./SchemaRow";
+import { useDebounce } from "use-debounce";
 
 const DEFAULT_NUMBER_TO_RENDER = 50;
 const PAGE_SIZE = 50;
 
+const SchemaTable: FC<{ schemas: Schema[] }> = ({ schemas }) => (
+  <Table
+    sx={{
+      maxWidth: "100%",
+      overflow: "hidden",
+      display: {
+        xs: "block",
+        lg: "revert",
+      },
+    }}
+  >
+    <SchemaHeaderRow />
+    <TableBody
+      sx={{
+        "&>tr:nth-of-type(odd)": {
+          backgroundColor: {
+            xs: "#F0EBF8",
+            lg: "revert",
+          },
+        },
+        display: {
+          xs: "block",
+          lg: "revert",
+        },
+      }}
+    >
+      {schemas.map((s) => (
+        <SchemaRow key={`${s.fullName}${s.version}`} schema={s} />
+      ))}
+    </TableBody>
+  </Table>
+);
+
+const MemoizedSchemaTable = memo(SchemaTable);
+
 type SchemaListProps = {
   schemas: Schema[];
 };
-
 const SchemaList: FC<SchemaListProps> = ({ schemas }) => {
-  const [filter, setFilter] = useState("");
+  const [filterText, setFilterText] = useState("");
+  const [filter] = useDebounce(filterText, 200);
   const [renderCount, setRenderCount] = useState(DEFAULT_NUMBER_TO_RENDER);
   const trackInteraction = useTrackInteraction();
-  const renderedSchemas = schemas.filter((s) =>
-    filter.length === 0
-      ? true
-      : s.fullName.toLowerCase().includes(filter.toLowerCase())
+
+  const filteredSchemas = useMemo(
+    () =>
+      schemas.filter((s) =>
+        filter.length === 0
+          ? true
+          : s.fullName.toLowerCase().includes(filter.toLowerCase())
+      ),
+    [filter, schemas]
+  );
+
+  const slicedSchemas = useMemo(
+    () => filteredSchemas.slice(0, renderCount),
+    [filteredSchemas, renderCount]
   );
 
   return (
@@ -58,9 +104,9 @@ const SchemaList: FC<SchemaListProps> = ({ schemas }) => {
           }}
         >
           <TextField
-            value={filter}
+            value={filterText}
             onFocus={() => trackInteraction("focus", "textbox", "search")}
-            onChange={(e) => setFilter(e.target.value)}
+            onChange={(e) => setFilterText(e.target.value)}
             sx={{
               width: "100%",
               backgroundColor: (theme) => theme.palette.common.white,
@@ -78,42 +124,14 @@ const SchemaList: FC<SchemaListProps> = ({ schemas }) => {
             },
           }}
         >
-          Showing {Math.min(renderCount, renderedSchemas.length)} of{" "}
-          {renderedSchemas.length} schemas
+          Showing {Math.min(renderCount, filteredSchemas.length)} of{" "}
+          {filteredSchemas.length} schemas
         </Typography>
       </Box>
-      <Table
-        sx={{
-          maxWidth: "100%",
-          overflow: "hidden",
-          display: {
-            xs: "block",
-            lg: "revert",
-          },
-        }}
-      >
-        <SchemaHeaderRow />
-        <TableBody
-          sx={{
-            "&>tr:nth-of-type(odd)": {
-              backgroundColor: {
-                xs: "#F0EBF8",
-                lg: "revert",
-              },
-            },
-            display: {
-              xs: "block",
-              lg: "revert",
-            },
-          }}
-        >
-          {renderedSchemas.slice(0, renderCount).map((s) => (
-            <SchemaRow key={`${s.fullName}${s.version}`} schema={s} />
-          ))}
-        </TableBody>
-      </Table>
 
-      {renderedSchemas.length > renderCount && (
+      <MemoizedSchemaTable schemas={slicedSchemas} />
+
+      {filteredSchemas.length > renderCount && (
         <Box
           sx={{
             marginBottom: 2,
