@@ -108,7 +108,7 @@ const SchemaRow: FC<SchemaRowProps> = ({ schema }) => {
         <Typography variant={"body1"}>{schema.version}</Typography>
       </SchemaCell>
 
-      <SchemaCell label={"Links"}>
+      <SchemaCell label={"View"}>
         <Box display={"flex"} sx={{ columnGap: 3 }}>
           <Link
             href={`https://github.com/snowplow/iglu-central/tree/master/schemas/${schema.fullName}/${schema.type}/${schema.version}`}
