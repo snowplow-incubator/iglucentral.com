@@ -114,7 +114,14 @@ const SchemaList: FC<SchemaListProps> = ({ schemas }) => {
       </Table>
 
       {renderedSchemas.length > renderCount && (
-        <Box sx={{ paddingTop: 2, display: "flex", justifyContent: "center" }}>
+        <Box
+          sx={{
+            marginBottom: 2,
+            paddingTop: 2,
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
           <Button
             size="large"
             variant={"contained"}
