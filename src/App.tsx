@@ -5,8 +5,8 @@ import SchemasPage from "./containers/SchemasPage";
 
 const collector: Collector = {
   name: "ops1",
-  endpoint: "collector.snowplowanalytics.com",
-  cookieName: "_sp5_",
+  endpoint: "https://collector.snowplowanalytics.com",
+  anonymousTracking: true,
 };
 
 const App = () => {
