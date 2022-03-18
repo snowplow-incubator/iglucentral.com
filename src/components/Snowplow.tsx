@@ -25,7 +25,8 @@ export const SnowplowContext = React.createContext<SnowplowClient | undefined>(
 export type Collector = {
   name: string;
   endpoint: string;
-  cookieName: string;
+  cookieName?: string;
+  anonymousTracking?: boolean;
 };
 
 type SnowplowProviderProps = {
@@ -43,6 +44,7 @@ export const SnowplowProvider: FC<SnowplowProviderProps> = ({
       newTracker(collector.name, collector.endpoint, {
         appId,
         cookieName: collector.cookieName,
+        anonymousTracking: collector.anonymousTracking || false,
       });
     });
   }, [collectors, appId]);
