@@ -44,7 +44,9 @@ export const SnowplowProvider: FC<SnowplowProviderProps> = ({
       newTracker(collector.name, collector.endpoint, {
         appId,
         cookieName: collector.cookieName,
-        anonymousTracking: collector.anonymousTracking || false,
+        anonymousTracking: collector.anonymousTracking
+          ? { withServerAnonymisation: true }
+          : false,
       });
     });
   }, [collectors, appId]);
