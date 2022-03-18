@@ -123,7 +123,7 @@ const SchemaRow: FC<SchemaRowProps> = ({ schema }) => {
             </Box>
           </Link>
           <Link
-            href={`//iglucentral.com/schemas/${schema.fullName}/${schema.type}/${schema.version}`}
+            href={`/schemas/${schema.fullName}/${schema.type}/${schema.version}`}
             target={"_blank"}
             onClick={() =>
               trackInteraction("click", "link", `${schema.name}-raw`)
