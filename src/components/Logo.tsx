@@ -1,5 +1,5 @@
 import { Box, SvgIcon, SvgIconProps } from "@mui/material";
-import { FC } from "react";
+import { FC, PropsWithChildren } from "react";
 
 export const Snowplow: FC<SvgIconProps> = (props) => (
   <SvgIcon {...props} fontSize="inherit">
@@ -24,16 +24,16 @@ const SnowplowName: FC = () => (
   </svg>
 );
 
-const LogoContainer: FC = ({ children }) => (
+const LogoContainer: FC<PropsWithChildren> = ({ children }) => (
   <Box
     sx={{
       display: "flex",
       alignItems: "center",
       color: (t) => t.palette.common.white,
-      "& > svg:first-child": {
+      "& > svg:first-of-type": {
         marginRight: (t) => t.spacing(0.5),
       },
-      "& > svg:nth-child(2)": {
+      "& > svg:nth-of-type(2)": {
         display: {
           xs: "none",
           md: "inline-block",

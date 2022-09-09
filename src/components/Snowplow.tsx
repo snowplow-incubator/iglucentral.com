@@ -1,4 +1,9 @@
-import React, { FC, useCallback, useLayoutEffect } from "react";
+import React, {
+  FC,
+  PropsWithChildren,
+  useCallback,
+  useLayoutEffect,
+} from "react";
 import {
   newTracker,
   addGlobalContexts,
@@ -34,7 +39,7 @@ type SnowplowProviderProps = {
   collectors: Collector[];
 };
 
-export const SnowplowProvider: FC<SnowplowProviderProps> = ({
+export const SnowplowProvider: FC<PropsWithChildren<SnowplowProviderProps>> = ({
   appId,
   collectors,
   children,
