@@ -1,9 +1,9 @@
 import { Box, Link, Typography } from "@mui/material";
-import { FC, useEffect } from "react";
+import { FC, PropsWithChildren, useEffect } from "react";
 import Logo from "./Logo";
 import { useTrackInteraction, useTrackPageView } from "./Snowplow";
 
-const Page: FC = ({ children }) => {
+const Page: FC<PropsWithChildren> = ({ children }) => {
   const trackPageView = useTrackPageView();
   const trackInteraction = useTrackInteraction();
   useEffect(() => {

@@ -6,7 +6,7 @@ import {
   TableCell,
   TableHead,
 } from "@mui/material";
-import { FC } from "react";
+import { FC, PropsWithChildren } from "react";
 import { Schema } from "../data/types";
 import { useTrackInteraction } from "./Snowplow";
 import GitHubIcon from "@mui/icons-material/GitHub";
@@ -31,7 +31,10 @@ export const SchemaHeaderRow = () => (
   </TableHead>
 );
 
-const SchemaCell: FC<{ label: string }> = ({ label, children }) => {
+const SchemaCell: FC<PropsWithChildren<{ label: string }>> = ({
+  label,
+  children,
+}) => {
   return (
     <TableCell
       sx={{
