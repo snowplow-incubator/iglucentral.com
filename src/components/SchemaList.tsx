@@ -56,9 +56,14 @@ const MemoizedSchemaTable = memo(SchemaTable);
 
 type SchemaListProps = {
   schemas: Schema[];
+  filterText: string;
+  onFilterTextChanged: (filterText: string) => void;
 };
-const SchemaList: FC<SchemaListProps> = ({ schemas }) => {
-  const [filterText, setFilterText] = useState("");
+const SchemaList: FC<SchemaListProps> = ({
+  schemas,
+  filterText,
+  onFilterTextChanged,
+}) => {
   const [filter] = useDebounce(filterText, 200);
   const [renderCount, setRenderCount] = useState(DEFAULT_NUMBER_TO_RENDER);
   const trackInteraction = useTrackInteraction();
@@ -110,7 +115,9 @@ const SchemaList: FC<SchemaListProps> = ({ schemas }) => {
           <TextField
             value={filterText}
             onFocus={() => trackInteraction("focus", "textbox", "search")}
-            onChange={(e) => setFilterText(e.target.value)}
+            onChange={({ target: { value } }) => {
+              onFilterTextChanged(value);
+            }}
             sx={{
               width: "100%",
               backgroundColor: (theme) => theme.palette.common.white,

@@ -8,11 +8,16 @@ import Loader from "../components/Loader";
 
 const SchemasPage = () => {
   const [schemas, setSchemas] = useState<Schema[] | undefined>(undefined);
-
+  const [filterText, setFilterText] = useState("");
   useEffect(() => {
     getSchemas()
       .then((schemas) => setSchemas(schemas))
       .catch(() => setSchemas([]));
+  }, []);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    setFilterText(params.get("q") || "");
   }, []);
 
   return (
@@ -28,7 +33,14 @@ const SchemasPage = () => {
           <Loader />
         </Box>
       ) : (
-        <SchemaList schemas={schemas} />
+        <SchemaList
+          filterText={filterText}
+          onFilterTextChanged={(f) => {
+            setFilterText(f);
+            window.history.replaceState("", "", `?q=${f}`);
+          }}
+          schemas={schemas}
+        />
       )}
     </Page>
   );
