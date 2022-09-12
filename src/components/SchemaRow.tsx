@@ -5,6 +5,8 @@ import {
   TableRow,
   TableCell,
   TableHead,
+  Alert,
+  AlertTitle,
 } from "@mui/material";
 import { FC, PropsWithChildren } from "react";
 import { Schema } from "../data/types";
@@ -29,6 +31,34 @@ export const SchemaHeaderRow = () => (
       <TableCell>View</TableCell>
     </TableRow>
   </TableHead>
+);
+
+export const SchemaEmptyRow: FC = () => (
+  <TableRow
+    sx={{
+      display: {
+        xs: "block",
+        lg: "revert",
+      },
+      padding: 2,
+    }}
+  >
+    <TableCell
+      sx={{
+        display: {
+          xs: "block",
+          lg: "revert",
+        },
+        border: 0,
+      }}
+      colSpan={5}
+    >
+      <Alert severity="info">
+        <AlertTitle>No schemas found</AlertTitle>No schemas found with the
+        current query.
+      </Alert>
+    </TableCell>
+  </TableRow>
 );
 
 const SchemaCell: FC<PropsWithChildren<{ label: string }>> = ({
