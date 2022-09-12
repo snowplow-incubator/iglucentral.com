@@ -9,7 +9,7 @@ import {
 import { FC, useMemo, useState, memo } from "react";
 import { Schema } from "../data/types";
 import { useTrackInteraction } from "./Snowplow";
-import SchemaRow, { SchemaHeaderRow } from "./SchemaRow";
+import SchemaRow, { SchemaHeaderRow, SchemaEmptyRow } from "./SchemaRow";
 import { useDebounce } from "use-debounce";
 
 const DEFAULT_NUMBER_TO_RENDER = 50;
@@ -29,7 +29,7 @@ const SchemaTable: FC<{ schemas: Schema[] }> = ({ schemas }) => (
     <SchemaHeaderRow />
     <TableBody
       sx={{
-        "&>tr:nth-of-type(odd)": {
+        "&>tr:nth-of-type(even)": {
           backgroundColor: {
             xs: "#F0EBF8",
             lg: "revert",
@@ -41,9 +41,13 @@ const SchemaTable: FC<{ schemas: Schema[] }> = ({ schemas }) => (
         },
       }}
     >
-      {schemas.map((s) => (
-        <SchemaRow key={`${s.fullName}${s.version}`} schema={s} />
-      ))}
+      {schemas.length === 0 ? (
+        <SchemaEmptyRow />
+      ) : (
+        schemas.map((s) => (
+          <SchemaRow key={`${s.fullName}${s.version}`} schema={s} />
+        ))
+      )}
     </TableBody>
   </Table>
 );
