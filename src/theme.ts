@@ -64,16 +64,6 @@ const theme = createTheme({
     },
   },
   components: {
-    MuiButton: {
-      defaultProps: {
-        disableRipple: true,
-      },
-      styleOverrides: {
-        root: {
-          textTransform: "none",
-        },
-      },
-    },
     MuiAlert: {
       styleOverrides: {
         root: {
@@ -190,6 +180,101 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           margin: 0,
+        },
+      },
+    },
+    MuiButton: {
+      defaultProps: {
+        disableRipple: true,
+      },
+      styleOverrides: {
+        root: {
+          textTransform: "none",
+        },
+        text: {
+          fontWeight: 400,
+          boxShadow: "none",
+          textTransform: "none",
+          textDecoration: "underline",
+          "&:hover": {
+            boxShadow: "none",
+            backgroundColor: "transparent",
+            textDecoration: "underline",
+          },
+        },
+      },
+    },
+    MuiDialog: {
+      styleOverrides: {
+        paper: {
+          position: "absolute" as "absolute",
+          right: 0,
+          top: 0,
+          marginBottom: 0,
+          bottom: 0,
+          borderRadius: `8px 8px 0 0`,
+          maxHeight: "100%",
+        },
+        paperWidthSm: {
+          maxWidth: "640px",
+        },
+        paperWidthMd: {
+          maxWidth: "800px",
+        },
+        paperWidthLg: {
+          maxWidth: "960px",
+        },
+        paperScrollPaper: {
+          maxHeight: "calc(100% - 24px)",
+        },
+      },
+    },
+    MuiDialogTitle: {
+      styleOverrides: {
+        root: {
+          backgroundColor: "#F2F4F7",
+          padding: "24px 24px 24px 48px",
+        },
+      },
+    },
+    MuiDialogContent: {
+      styleOverrides: {
+        root: {
+          padding: "24px 48px 24px 48px",
+          "&.MuiDialogContent-root": {
+            paddingTop: "24px",
+          },
+        },
+      },
+    },
+    MuiTab: {
+      styleOverrides: {
+        root: {
+          minWidth: 0,
+          textTransform: "none",
+          fontWeight: 400,
+          borderBottom: `4px solid #E4E7EC`,
+          color: "#101828",
+          "&.Mui-selected": {
+            color: "#101828",
+            fontWeight: 500,
+          },
+        },
+      },
+    },
+    MuiTabs: {
+      styleOverrides: {
+        root: {
+          overflow: "visible",
+          marginBottom: 16,
+          "& .MuiTabs-indicator": {
+            transition: "none",
+            height: "4px",
+          },
+
+          "& .MuiTabs-scroller": {
+            overflow: "visible !important",
+          },
         },
       },
     },
