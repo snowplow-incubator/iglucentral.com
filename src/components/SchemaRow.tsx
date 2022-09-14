@@ -113,12 +113,14 @@ const SchemaRow: FC<SchemaRowProps> = ({ schema }) => {
   const trackInteraction = useTrackInteraction();
   const [schemaModalOpen, setSchemaModalOpen] = useState(false);
   const [rawSchema, setRawSchema] = useState<SelfDescribingSchema | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const handleViewSchema = () => {
-    trackInteraction("click", "link", `${schema.name}-raw`);
+    setLoading(true);
+    setSchemaModalOpen(true);
     getSchema(schema.fullName, schema.type, schema.version)
       .then((rawSchemas) => setRawSchema(rawSchemas))
-      .then(() => setSchemaModalOpen(true))
+      .then(() => setLoading(false))
       .catch(() => setRawSchema(null));
   };
 
@@ -197,6 +199,7 @@ const SchemaRow: FC<SchemaRowProps> = ({ schema }) => {
         title={schema.name}
         rawSchema={rawSchema}
         onClose={handleClose}
+        loading={loading}
       />
     </>
   );

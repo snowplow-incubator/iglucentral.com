@@ -7,6 +7,7 @@ import {
   DialogContent,
   DialogTitle,
   IconButton,
+  Skeleton,
   styled,
   Tab,
   Tabs,
@@ -23,6 +24,7 @@ type SchemaModalProps = {
   title: string;
   rawSchema: SelfDescribingSchema | null;
   onClose?: (e?: any, r?: any) => void;
+  loading: boolean;
 };
 
 interface TabPanelProps {
@@ -33,6 +35,10 @@ interface TabPanelProps {
 
 type CloseIconButtonProps = {
   onClose?: (e?: any, r?: any) => void;
+};
+
+type LoadingSchemaProps = {
+  title: string;
 };
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
@@ -88,11 +94,48 @@ const TabPanel: FC<TabPanelProps> = ({ children, value, index }) => {
   );
 };
 
+const LoadingSchema: FC<LoadingSchemaProps> = ({ title }) => (
+  <>
+    <DialogTitle>
+      <Box sx={{ display: "flex", columnGap: 3 }}>
+        <Box
+          display={"flex"}
+          flexDirection={"column"}
+          justifyContent={"center"}
+          maxWidth="100%"
+          width={"20em"}
+        >
+          <Typography sx={{ fontWeight: 500 }} variant={"h4"} gutterBottom>
+            {title}
+          </Typography>
+          <Typography>
+            <Skeleton />
+          </Typography>
+        </Box>
+      </Box>
+    </DialogTitle>
+    <DialogContent>
+      <Box>
+        <Box width="20em" maxWidth="100%">
+          <Skeleton variant="text" height="50px" />
+        </Box>
+        <Typography variant="h2" my={3}>
+          <Skeleton />
+        </Typography>
+        <Box width="100%">
+          <Skeleton variant="rectangular" height="500px" />
+        </Box>
+      </Box>
+    </DialogContent>
+  </>
+);
+
 const SchemaModal: FC<SchemaModalProps> = ({
   isOpen = false,
   title,
   rawSchema,
   onClose,
+  loading,
 }) => {
   const [tab, setTab] = useState(0);
 
@@ -111,94 +154,100 @@ const SchemaModal: FC<SchemaModalProps> = ({
       fullWidth
       maxWidth="md"
     >
-      {rawSchema ? (
-        <>
-          <DialogTitle>
-            <Box
-              display="flex"
-              justifyContent={"space-between"}
-              alignItems={"center"}
-              sx={{ columnGap: 5 }}
-            >
-              <Box sx={{ display: "flex", columnGap: 3 }}>
-                <Box
-                  display={"flex"}
-                  flexDirection={"column"}
-                  justifyContent={"center"}
-                >
-                  <Typography
-                    sx={{ fontWeight: 500 }}
-                    variant={"h4"}
-                    gutterBottom={Boolean(rawSchema.description || false)}
-                  >
-                    {title}
-                  </Typography>
-                  {rawSchema.description ? (
-                    <Typography component="div">
-                      {rawSchema.description}
-                    </Typography>
-                  ) : null}
-                </Box>
-              </Box>
-              <CloseIconButton onClose={onClose} />
-            </Box>
-          </DialogTitle>
-          <DialogContent>
-            <Box>
-              <Tabs
-                value={tab}
-                onChange={(_e: any, v: number) => {
-                  setTab(v);
-                }}
-              >
-                <Tab disableRipple label="JSON Schema" value={0} />
-                <Tab disableRipple value={1} label="General Information" />
-              </Tabs>
-              <TabPanel value={tab} index={0}>
-                <Typography variant="h3" mb={2} sx={{ fontWeight: 500 }}>
-                  JSON Schema
-                </Typography>
-                <CodePanel
-                  language={"json"}
-                  code={JSON.stringify(schema, null, 2)}
-                />
-              </TabPanel>
-
-              <TabPanel value={tab} index={1}>
-                <GeneralInformation rawSchema={rawSchema} />
-              </TabPanel>
-            </Box>
-          </DialogContent>
-        </>
+      {loading ? (
+        <LoadingSchema title={title} />
       ) : (
         <>
-          <DialogTitle>
-            <Box
-              display="flex"
-              justifyContent={"space-between"}
-              alignItems={"center"}
-              sx={{ columnGap: 5 }}
-            >
-              <Box sx={{ display: "flex", columnGap: 3 }}>
+          {rawSchema ? (
+            <>
+              <DialogTitle>
                 <Box
-                  display={"flex"}
-                  flexDirection={"column"}
-                  justifyContent={"center"}
+                  display="flex"
+                  justifyContent={"space-between"}
+                  alignItems={"center"}
+                  sx={{ columnGap: 5 }}
                 >
-                  <Typography sx={{ fontWeight: 500 }} variant={"h4"}>
-                    {title}
-                  </Typography>
+                  <Box sx={{ display: "flex", columnGap: 3 }}>
+                    <Box
+                      display={"flex"}
+                      flexDirection={"column"}
+                      justifyContent={"center"}
+                    >
+                      <Typography
+                        sx={{ fontWeight: 500 }}
+                        variant={"h4"}
+                        gutterBottom={Boolean(rawSchema.description || false)}
+                      >
+                        {title}
+                      </Typography>
+                      {rawSchema.description ? (
+                        <Typography component="div">
+                          {rawSchema.description}
+                        </Typography>
+                      ) : null}
+                    </Box>
+                  </Box>
+                  <CloseIconButton onClose={onClose} />
                 </Box>
-              </Box>
+              </DialogTitle>
+              <DialogContent>
+                <Box>
+                  <Tabs
+                    value={tab}
+                    onChange={(_e: any, v: number) => {
+                      setTab(v);
+                    }}
+                  >
+                    <Tab disableRipple label="JSON Schema" value={0} />
+                    <Tab disableRipple value={1} label="General Information" />
+                  </Tabs>
+                  <TabPanel value={tab} index={0}>
+                    <Typography variant="h3" mb={2} sx={{ fontWeight: 500 }}>
+                      JSON Schema
+                    </Typography>
+                    <CodePanel
+                      language={"json"}
+                      code={JSON.stringify(schema, null, 2)}
+                    />
+                  </TabPanel>
 
-              <CloseIconButton onClose={onClose} />
-            </Box>
-          </DialogTitle>
-          <DialogContent>
-            <Alert severity="error">
-              <AlertTitle>Could not load schema</AlertTitle>
-            </Alert>
-          </DialogContent>
+                  <TabPanel value={tab} index={1}>
+                    <GeneralInformation rawSchema={rawSchema} />
+                  </TabPanel>
+                </Box>
+              </DialogContent>
+            </>
+          ) : (
+            <>
+              <DialogTitle>
+                <Box
+                  display="flex"
+                  justifyContent={"space-between"}
+                  alignItems={"center"}
+                  sx={{ columnGap: 5 }}
+                >
+                  <Box sx={{ display: "flex", columnGap: 3 }}>
+                    <Box
+                      display={"flex"}
+                      flexDirection={"column"}
+                      justifyContent={"center"}
+                    >
+                      <Typography sx={{ fontWeight: 500 }} variant={"h4"}>
+                        {title}
+                      </Typography>
+                    </Box>
+                  </Box>
+
+                  <CloseIconButton onClose={onClose} />
+                </Box>
+              </DialogTitle>
+              <DialogContent>
+                <Alert severity="error">
+                  <AlertTitle>Could not load schema</AlertTitle>
+                </Alert>
+              </DialogContent>
+            </>
+          )}
         </>
       )}
     </StyledDialog>
