@@ -58,6 +58,11 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
       padding: "24px",
     },
   },
+  "& .MuiDialogTitle-root": {
+    [theme.breakpoints.down("sm")]: {
+      paddingLeft: "24px",
+    },
+  },
 }));
 
 const StyledIconButton = styled(IconButton)(({ theme }) => ({
@@ -152,7 +157,7 @@ const SchemaModal: FC<SchemaModalProps> = ({
       open={isOpen}
       TransitionComponent={ModalTransition}
       fullWidth
-      maxWidth="md"
+      maxWidth="lg"
     >
       {loading ? (
         <LoadingSchema title={title} />

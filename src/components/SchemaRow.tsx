@@ -121,7 +121,10 @@ const SchemaRow: FC<SchemaRowProps> = ({ schema }) => {
     getSchema(schema.fullName, schema.type, schema.version)
       .then((rawSchemas) => setRawSchema(rawSchemas))
       .then(() => setLoading(false))
-      .catch(() => setRawSchema(null));
+      .catch(() => {
+        setRawSchema(null);
+        setLoading(false);
+      });
   };
 
   const handleClose = () => {
@@ -181,7 +184,7 @@ const SchemaRow: FC<SchemaRowProps> = ({ schema }) => {
             </Link>
             <Link
               onClick={() => {
-                trackInteraction("click", "link", `${schema.name}-raw`);
+                trackInteraction("click", "link", `${schema.name}-view`);
                 handleViewSchema();
               }}
               sx={{ cursor: "pointer" }}
