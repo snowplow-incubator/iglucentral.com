@@ -100,7 +100,12 @@ const SchemaList: FC<SchemaListProps> = ({
           },
           alignItems: "center",
           marginBottom: 4,
-          paddingX: 1,
+          paddingX: {
+            xl: 0,
+            xs: 1,
+            sm: 1,
+            md: 1,
+          },
           paddingY: 3,
         }}
       >
@@ -124,13 +129,13 @@ const SchemaList: FC<SchemaListProps> = ({
               width: "100%",
               backgroundColor: (theme) => theme.palette.common.white,
             }}
-            placeholder="Search for a schema"
+            placeholder="Search for a schema (Eg. Marketing automation, eCommerce)"
             variant="outlined"
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
                   <SearchIcon
-                    fontSize="medium"
+                    fontSize="small"
                     sx={{ color: (t) => t.palette.primary.main }}
                   />
                 </InputAdornment>
@@ -139,8 +144,9 @@ const SchemaList: FC<SchemaListProps> = ({
           />
         </Box>
         <Typography
-          variant="h3"
+          variant="h5"
           sx={{
+            color: "#475467",
             marginTop: {
               xs: 2,
               md: 0,
@@ -168,6 +174,18 @@ const SchemaList: FC<SchemaListProps> = ({
           },
         }}
       >
+        <Typography
+          sx={{
+            marginLeft: {
+              xs: 2,
+              lg: 0,
+            },
+            marginBottom: 2,
+          }}
+          variant="h3"
+        >
+          Schema list
+        </Typography>
         <MemoizedSchemaTable schemas={slicedSchemas} />
       </Box>
       {filteredSchemas.length > renderCount && (

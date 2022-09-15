@@ -110,7 +110,7 @@ const LoadingSchema: FC<LoadingSchemaProps> = ({ title }) => (
           maxWidth="100%"
           width={"20em"}
         >
-          <Typography sx={{ fontWeight: 500 }} variant={"h4"} gutterBottom>
+          <Typography variant={"h4semibold"} gutterBottom>
             {title}
           </Typography>
           <Typography>
@@ -179,8 +179,7 @@ const SchemaModal: FC<SchemaModalProps> = ({
                       justifyContent={"center"}
                     >
                       <Typography
-                        sx={{ fontWeight: 500 }}
-                        variant={"h4"}
+                        variant={"h4semibold"}
                         gutterBottom={Boolean(rawSchema.description || false)}
                       >
                         {title}
@@ -207,9 +206,9 @@ const SchemaModal: FC<SchemaModalProps> = ({
                     <Tab disableRipple value={1} label="General Information" />
                   </Tabs>
                   <TabPanel value={tab} index={0}>
-                    <Typography variant="h3" mb={2} sx={{ fontWeight: 500 }}>
-                      JSON Schema
-                    </Typography>
+                    <Box mb={2}>
+                      <Typography variant="h3semibold">JSON Schema</Typography>
+                    </Box>
                     <CodePanel
                       language={"json"}
                       code={JSON.stringify(schema, null, 2)}
@@ -237,9 +236,7 @@ const SchemaModal: FC<SchemaModalProps> = ({
                       flexDirection={"column"}
                       justifyContent={"center"}
                     >
-                      <Typography sx={{ fontWeight: 500 }} variant={"h4"}>
-                        {title}
-                      </Typography>
+                      <Typography variant={"h4semibold"}>{title}</Typography>
                     </Box>
                   </Box>
 

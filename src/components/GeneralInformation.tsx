@@ -11,10 +11,9 @@ const GeneralInformation: FC<GeneralInformationProps> = ({ rawSchema }) => {
 
   return (
     <>
-      <Typography variant="h3" mb={2} sx={{ fontWeight: 500 }}>
-        General Information
-      </Typography>
-
+      <Box mb={2}>
+        <Typography variant="h3semibold">General information</Typography>
+      </Box>
       <Box>
         <Box mb={2}>
           <Typography variant="h4" gutterBottom>

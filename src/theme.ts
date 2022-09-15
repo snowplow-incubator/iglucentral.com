@@ -1,5 +1,54 @@
 import { createTheme } from "@mui/material";
 import { common } from "@mui/material/colors";
+import React from "react";
+
+declare module "@mui/material/styles" {
+  interface TypographyVariants {
+    h1semibold: React.CSSProperties;
+    h2semibold: React.CSSProperties;
+    h3semibold: React.CSSProperties;
+    h4semibold: React.CSSProperties;
+    h5semibold: React.CSSProperties;
+    h6semibold?: React.CSSProperties;
+    body1italic?: React.CSSProperties;
+    body1semibold: React.CSSProperties;
+    body2italic?: React.CSSProperties;
+    body2semibold: React.CSSProperties;
+    subtitle1semibold: React.CSSProperties;
+  }
+
+  // allow configuration using `createTheme`
+  interface TypographyVariantsOptions {
+    h1semibold?: React.CSSProperties;
+    h2semibold?: React.CSSProperties;
+    h3semibold?: React.CSSProperties;
+    h4semibold?: React.CSSProperties;
+    h5semibold?: React.CSSProperties;
+    h6semibold?: React.CSSProperties;
+    body1italic?: React.CSSProperties;
+    body1semibold?: React.CSSProperties;
+    body2italic?: React.CSSProperties;
+    body2semibold?: React.CSSProperties;
+    subtitle1semibold?: React.CSSProperties;
+  }
+}
+
+// Update the Typography's variant prop options
+declare module "@mui/material/Typography" {
+  interface TypographyPropsVariantOverrides {
+    h1semibold: true;
+    h2semibold: true;
+    h3semibold: true;
+    h4semibold: true;
+    h5semibold: true;
+    h6semibold: true;
+    body1italic: true;
+    body1semibold: true;
+    body2italic: true;
+    body2semibold: true;
+    subtitle1semibold: true;
+  }
+}
 
 const fontWeight = {
   light: 300,
@@ -14,6 +63,9 @@ const theme = createTheme({
       main: "#6638B8",
       dark: "#552E9C",
     },
+    text: {
+      primary: "#1D2939",
+    },
   },
   typography: {
     h1: {
@@ -25,6 +77,7 @@ const theme = createTheme({
       fontFamily: '"Rubik", sans-serif',
       fontSize: "28px",
       fontWeight: fontWeight.normal,
+      lineHeight: "32px",
     },
     h3: {
       fontFamily: '"Rubik", sans-serif',
@@ -36,16 +89,21 @@ const theme = createTheme({
     h4: {
       fontFamily: '"Rubik", sans-serif',
       fontSize: "20px",
-      fontWeight: fontWeight.bold,
+      fontWeight: fontWeight.normal,
       letterSpacing: "0px",
       lineHeight: "20px",
     },
     h5: {
       fontFamily: '"Rubik", sans-serif',
       fontSize: "18px",
-      fontWeight: fontWeight.bold,
+      fontWeight: fontWeight.normal,
+      lineHeight: "20px",
+    },
+    h6: {
+      fontFamily: "Rubik, sans-serif",
     },
     body1: {
+      fontFamily: '"Roboto", sans-serif',
       fontSize: "16px",
       fontWeight: fontWeight.normal,
       letterSpacing: "0px",
@@ -61,6 +119,75 @@ const theme = createTheme({
       fontFamily: '"Rubik", sans-serif',
       fontSize: "14px",
       fontWeight: fontWeight.bold,
+      lineHeight: "16px",
+    },
+    h1semibold: {
+      fontSize: "32px",
+      fontWeight: fontWeight.bold,
+      fontFamily: "Rubik, sans-serif",
+    },
+    h2semibold: {
+      fontSize: "28px",
+      fontWeight: fontWeight.bold,
+      fontFamily: "Rubik, sans-serif",
+      lineHeight: "32px",
+    },
+    h3semibold: {
+      fontWeight: fontWeight.bold,
+      fontSize: "24px",
+      letterSpacing: "0px",
+      lineHeight: "24px",
+      fontFamily: "Rubik, sans-serif",
+    },
+    h4semibold: {
+      fontSize: "20px",
+      fontWeight: fontWeight.bold,
+      letterSpacing: "0px",
+      lineHeight: "20px",
+      fontFamily: "Rubik, sans-serif",
+    },
+    h5semibold: {
+      fontSize: "18px",
+      fontWeight: fontWeight.bold,
+      fontFamily: "Rubik, sans-serif",
+      lineHeight: "20px",
+    },
+    h6semibold: {
+      fontWeight: fontWeight.bold,
+      fontFamily: "Rubik, sans-serif",
+    },
+    body1semibold: {
+      fontSize: "16px",
+      fontWeight: fontWeight.bold,
+      letterSpacing: "0px",
+      lineHeight: "24px",
+      fontFamily: "Roboto, sans-serif",
+    },
+    body1italic: {
+      fontSize: "16px",
+      fontStyle: "italic",
+      letterSpacing: "0px",
+      lineHeight: "24px",
+      fontWeight: fontWeight.normal,
+    },
+    body2semibold: {
+      fontSize: "14px",
+      fontWeight: fontWeight.bold,
+      fontFamily: "Roboto, sans-serif",
+      lineHeight: "20px",
+    },
+    body2italic: {
+      fontSize: "14px",
+      lineHeight: "20px",
+      fontStyle: "italic",
+      fontFamily: "Roboto, sans-serif",
+      fontWeight: fontWeight.normal,
+    },
+    subtitle1semibold: {
+      fontWeight: fontWeight.bold,
+      fontSize: "14px",
+      lineHeight: "16px",
+      fontFamily: "Roboto, sans-serif",
     },
   },
   components: {
@@ -247,6 +374,34 @@ const theme = createTheme({
         },
       },
     },
+    MuiOutlinedInput: {
+      styleOverrides: {
+        multiline: {
+          padding: "1rem",
+        },
+        root: {
+          "&.Mui-disabled": {
+            color: "#101828",
+            backgroundColor: "#E4E7EC",
+          },
+          "& input::placeholder": {
+            color: "#667085",
+            opacity: 1,
+            fontSize: "14px",
+            lineHeight: "20px",
+          },
+        },
+        input: {
+          padding: "10px 14px 10px 0px",
+          "&.Mui-disabled": {
+            WebkitTextFillColor: "#000",
+          },
+        },
+        notchedOutline: {
+          borderColor: "#D0D5DD",
+        },
+      },
+    },
     MuiTab: {
       styleOverrides: {
         root: {
@@ -274,6 +429,25 @@ const theme = createTheme({
 
           "& .MuiTabs-scroller": {
             overflow: "visible !important",
+          },
+        },
+      },
+    },
+    MuiTable: {
+      styleOverrides: {
+        root: {
+          "& tr:last-of-type > td": {
+            borderBottom: "none",
+          },
+        },
+      },
+    },
+    MuiTableHead: {
+      styleOverrides: {
+        root: {
+          "& .MuiTableCell-root": {
+            fontFamily: "Rubik, sans-serif",
+            textTransform: "uppercase",
           },
         },
       },
