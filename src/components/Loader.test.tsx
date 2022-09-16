@@ -5,7 +5,7 @@ const component = () => <Loader />;
 
 describe("rendering", () => {
   it("should match the snapshot", () => {
-    const tree = render(component());
-    expect(tree.baseElement).toMatchSnapshot();
+    const { baseElement } = render(component());
+    expect(baseElement).toMatchSnapshot();
   });
 });

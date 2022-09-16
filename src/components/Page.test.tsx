@@ -3,7 +3,7 @@ import {
   ThemeProvider as MuiThemeProvider,
 } from "@mui/material/styles";
 import "@testing-library/jest-dom/extend-expect";
-import { render } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import theme from "../theme";
 import Page from "./Page";
 import { useTrackInteraction, useTrackPageView } from "./Snowplow";
@@ -23,12 +23,12 @@ describe("Page", () => {
   });
 
   it("should not explode on render", () => {
-    const { getByText } = render(
+    render(
       <MuiThemeProvider theme={createTheme(theme)}>
         <Page />
       </MuiThemeProvider>
     );
 
-    expect(getByText("Iglu Central")).toBeVisible();
+    expect(screen.getByText("Iglu Central")).toBeVisible();
   });
 });

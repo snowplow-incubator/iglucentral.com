@@ -3,7 +3,7 @@ import {
   ThemeProvider as MuiThemeProvider,
 } from "@mui/material/styles";
 import "@testing-library/jest-dom/extend-expect";
-import { render } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import theme from "../theme";
 import SchemaList from "./SchemaList";
 import { useTrackInteraction } from "./Snowplow";
@@ -56,45 +56,45 @@ describe("Schema List", () => {
   });
 
   it("should not explode on render", () => {
-    const { getByText, getAllByText } = render(
+    render(
       <MuiThemeProvider theme={createTheme(theme)}>
         <SchemaList {...defaultProps} />
       </MuiThemeProvider>
     );
 
-    expect(getByText("install")).toBeVisible();
-    expect(getByText("com.adjust")).toBeVisible();
-    expect(getAllByText("1-0-0").length).toEqual(3);
+    expect(screen.getByText("install")).toBeVisible();
+    expect(screen.getByText("com.adjust")).toBeVisible();
+    expect(screen.getAllByText("1-0-0").length).toEqual(3);
   });
 
   it("should render correctly given no schemas", () => {
-    const { getByText } = render(
+    render(
       <MuiThemeProvider theme={createTheme(theme)}>
         <SchemaList {...defaultProps} schemas={[]} />
       </MuiThemeProvider>
     );
 
-    expect(getByText("No schemas found")).toBeInTheDocument();
+    expect(screen.getByText("No schemas found")).toBeInTheDocument();
   });
 
   it("should render filtered schemas", () => {
-    const { getAllByText, queryByText } = render(
+    render(
       <MuiThemeProvider theme={createTheme(theme)}>
         <SchemaList {...defaultProps} filterText="wd_access_log" />
       </MuiThemeProvider>
     );
 
-    expect(queryByText("install")).not.toBeInTheDocument();
-    expect(getAllByText("wd_access_log").length).toEqual(2);
+    expect(screen.queryByText("install")).not.toBeInTheDocument();
+    expect(screen.getAllByText("wd_access_log").length).toEqual(2);
   });
 
   it("should render correctly if no schemas match filter text", () => {
-    const { getByText } = render(
+    render(
       <MuiThemeProvider theme={createTheme(theme)}>
         <SchemaList {...defaultProps} filterText="name_not_in_list" />
       </MuiThemeProvider>
     );
 
-    expect(getByText("No schemas found")).toBeVisible();
+    expect(screen.getByText("No schemas found")).toBeVisible();
   });
 });
