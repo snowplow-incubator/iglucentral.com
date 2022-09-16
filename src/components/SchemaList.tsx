@@ -1,16 +1,18 @@
 import {
   Box,
-  TextField,
-  Typography,
   Button,
+  InputAdornment,
   Table,
   TableBody,
+  TextField,
+  Typography,
 } from "@mui/material";
 import { FC, useMemo, useState, memo } from "react";
 import { Schema } from "../data/types";
 import { useTrackInteraction } from "./Snowplow";
 import SchemaRow, { SchemaHeaderRow, SchemaEmptyRow } from "./SchemaRow";
 import { useDebounce } from "use-debounce";
+import { SearchIcon } from "./icons";
 
 const DEFAULT_NUMBER_TO_RENDER = 50;
 const PAGE_SIZE = 50;
@@ -98,7 +100,12 @@ const SchemaList: FC<SchemaListProps> = ({
           },
           alignItems: "center",
           marginBottom: 4,
-          paddingX: 1,
+          paddingX: {
+            xl: 0,
+            xs: 1,
+            sm: 1,
+            md: 1,
+          },
           paddingY: 3,
         }}
       >
@@ -122,13 +129,24 @@ const SchemaList: FC<SchemaListProps> = ({
               width: "100%",
               backgroundColor: (theme) => theme.palette.common.white,
             }}
-            label="Search for a schema"
+            placeholder="Search for a schema (Eg. Marketing automation, eCommerce)"
             variant="outlined"
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon
+                    fontSize="small"
+                    sx={{ color: (t) => t.palette.primary.main }}
+                  />
+                </InputAdornment>
+              ),
+            }}
           />
         </Box>
         <Typography
-          variant="h3"
+          variant="h5"
           sx={{
+            color: "#475467",
             marginTop: {
               xs: 2,
               md: 0,
@@ -156,6 +174,18 @@ const SchemaList: FC<SchemaListProps> = ({
           },
         }}
       >
+        <Typography
+          sx={{
+            marginLeft: {
+              xs: 2,
+              lg: 0,
+            },
+            marginBottom: 2,
+          }}
+          variant="h3"
+        >
+          Schema list
+        </Typography>
         <MemoizedSchemaTable schemas={slicedSchemas} />
       </Box>
       {filteredSchemas.length > renderCount && (

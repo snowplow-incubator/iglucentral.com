@@ -68,7 +68,9 @@ const Page: FC<PropsWithChildren> = ({ children }) => {
           >
             <Typography sx={{ color: (t) => t.palette.common.white }}>
               <Link
-                sx={{ color: (t) => t.palette.common.white }}
+                sx={{
+                  color: (t) => t.palette.common.white,
+                }}
                 target={"_blank"}
                 href={"https://docs.snowplowanalytics.com"}
                 onClick={() =>

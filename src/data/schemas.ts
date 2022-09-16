@@ -26,3 +26,13 @@ export const getSchemas = async () => {
     });
   return schemas;
 };
+
+export const getSchema = async (
+  fullName: string,
+  type: string,
+  version: string
+) => {
+  const res = await fetch(`/schemas/${fullName}/${type}/${version}`);
+  const j = await res.json();
+  return j;
+};

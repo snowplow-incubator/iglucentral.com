@@ -1,3 +1,4 @@
+import { FC, PropsWithChildren, useState } from "react";
 import {
   Box,
   Link,
@@ -8,11 +9,11 @@ import {
   Alert,
   AlertTitle,
 } from "@mui/material";
-import { FC, PropsWithChildren } from "react";
-import { Schema } from "../data/types";
+import { Schema, SelfDescribingSchema } from "../data/types";
+import { ExternalLinkIcon, EyeIcon } from "./icons";
 import { useTrackInteraction } from "./Snowplow";
-import GitHubIcon from "@mui/icons-material/GitHub";
-import SourceIcon from "@mui/icons-material/Source";
+import SchemaModal from "./SchemaModal";
+import { getSchema } from "../data/schemas";
 
 export const SchemaHeaderRow = () => (
   <TableHead
@@ -110,66 +111,100 @@ type SchemaRowProps = {
 
 const SchemaRow: FC<SchemaRowProps> = ({ schema }) => {
   const trackInteraction = useTrackInteraction();
+  const [schemaModalOpen, setSchemaModalOpen] = useState(false);
+  const [rawSchema, setRawSchema] = useState<SelfDescribingSchema | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  const handleViewSchema = () => {
+    setLoading(true);
+    setSchemaModalOpen(true);
+    getSchema(schema.fullName, schema.type, schema.version)
+      .then((rawSchemas) => setRawSchema(rawSchemas))
+      .then(() => setLoading(false))
+      .catch(() => {
+        setRawSchema(null);
+        setLoading(false);
+      });
+  };
+
+  const handleClose = () => {
+    setSchemaModalOpen(false);
+    setTimeout(() => {
+      setRawSchema(null);
+    }, 1000);
+  };
+
   return (
-    <TableRow
-      sx={{
-        display: {
-          xs: "block",
-          lg: "revert",
-        },
-        padding: 2,
-      }}
-    >
-      <SchemaCell label={"Name"}>
-        <Typography variant={"body1"}>{schema.name}</Typography>
-      </SchemaCell>
-
-      <SchemaCell label={"Vendor"}>
-        <Box sx={{ maxWidth: "100%", overflow: "hidden" }}>
-          <Typography
-            sx={{
-              overflowWrap: "break-word",
-            }}
-            variant={"body1"}
-          >
-            {schema.vendor}
-          </Typography>
-        </Box>
-      </SchemaCell>
-
-      <SchemaCell label={"Version"}>
-        <Typography variant={"body1"}>{schema.version}</Typography>
-      </SchemaCell>
-
-      <SchemaCell label={"View"}>
-        <Box display={"flex"} sx={{ columnGap: 3 }}>
-          <Link
-            href={`https://github.com/snowplow/iglu-central/tree/master/schemas/${schema.fullName}/${schema.type}/${schema.version}`}
-            target={"_blank"}
-            onClick={() =>
-              trackInteraction("click", "link", `${schema.name}-github`)
-            }
-          >
-            <Box display={"flex"} alignItems={"center"} sx={{ columnGap: 1 }}>
-              <GitHubIcon />
-              Github
-            </Box>
+    <>
+      <TableRow
+        sx={{
+          display: {
+            xs: "block",
+            lg: "revert",
+          },
+          padding: 2,
+        }}
+      >
+        <SchemaCell label={"Name"}>
+          <Link sx={{ cursor: "pointer" }} onClick={handleViewSchema}>
+            <Typography variant={"body1"}>{schema.name}</Typography>
           </Link>
-          <Link
-            href={`/schemas/${schema.fullName}/${schema.type}/${schema.version}`}
-            target={"_blank"}
-            onClick={() =>
-              trackInteraction("click", "link", `${schema.name}-raw`)
-            }
-          >
-            <Box display={"flex"} alignItems={"center"} sx={{ columnGap: 1 }}>
-              <SourceIcon />
-              Raw
-            </Box>
-          </Link>
-        </Box>
-      </SchemaCell>
-    </TableRow>
+        </SchemaCell>
+
+        <SchemaCell label={"Vendor"}>
+          <Box sx={{ maxWidth: "100%", overflow: "hidden" }}>
+            <Typography
+              sx={{
+                overflowWrap: "break-word",
+              }}
+              variant={"body1"}
+            >
+              {schema.vendor}
+            </Typography>
+          </Box>
+        </SchemaCell>
+
+        <SchemaCell label={"Version"}>
+          <Typography variant={"body1"}>{schema.version}</Typography>
+        </SchemaCell>
+
+        <SchemaCell label={"View"}>
+          <Box display={"flex"} sx={{ columnGap: 3 }}>
+            <Link
+              href={`https://github.com/snowplow/iglu-central/tree/master/schemas/${schema.fullName}/${schema.type}/${schema.version}`}
+              target={"_blank"}
+              onClick={() =>
+                trackInteraction("click", "link", `${schema.name}-github`)
+              }
+            >
+              <Box display={"flex"} alignItems={"center"} sx={{ columnGap: 1 }}>
+                <ExternalLinkIcon fontSize="medium" />
+                Github
+              </Box>
+            </Link>
+            <Link
+              onClick={() => {
+                trackInteraction("click", "link", `${schema.name}-view`);
+                handleViewSchema();
+              }}
+              sx={{ cursor: "pointer" }}
+            >
+              <Box display={"flex"} alignItems={"center"} sx={{ columnGap: 1 }}>
+                <EyeIcon fontSize="medium" />
+                View
+              </Box>
+            </Link>
+          </Box>
+        </SchemaCell>
+      </TableRow>
+      <SchemaModal
+        isOpen={schemaModalOpen}
+        title={schema.name}
+        rawSchema={rawSchema}
+        onClose={handleClose}
+        loading={loading}
+      />
+    </>
   );
 };
 
