@@ -129,7 +129,7 @@ const SchemaList: FC<SchemaListProps> = ({
               width: "100%",
               backgroundColor: (theme) => theme.palette.common.white,
             }}
-            placeholder="Search for a schema (Eg. Marketing automation, eCommerce)"
+            placeholder="Search for a schema"
             variant="outlined"
             InputProps={{
               startAdornment: (
