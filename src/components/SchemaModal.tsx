@@ -16,8 +16,8 @@ import {
 import { CloseIcon } from "./icons";
 import ModalTransition from "./ModalTransition";
 import { SelfDescribingSchema } from "../data/types";
-import CodePanel from "./CodePanel";
 import GeneralInformation from "./GeneralInformation";
+import SchemaView from "./SchemaView";
 
 type SchemaModalProps = {
   isOpen: boolean;
@@ -191,21 +191,13 @@ const SchemaModal: FC<SchemaModalProps> = ({
                 <Box>
                   <Tabs
                     value={tab}
-                    onChange={(_e: any, v: number) => {
-                      setTab(v);
-                    }}
+                    onChange={(_e: any, v: number) => setTab(v)}
                   >
-                    <Tab disableRipple label="JSON Schema" value={0} />
-                    <Tab disableRipple value={1} label="General Information" />
+                    <Tab label="JSON Schema" value={0} />
+                    <Tab label="General Information" value={1} />
                   </Tabs>
                   <TabPanel value={tab} index={0}>
-                    <Box mb={2}>
-                      <Typography variant="h3semibold">JSON Schema</Typography>
-                    </Box>
-                    <CodePanel
-                      language={"json"}
-                      code={JSON.stringify(rawSchema, null, 2)}
-                    />
+                    <SchemaView rawSchema={rawSchema} />
                   </TabPanel>
 
                   <TabPanel value={tab} index={1}>
