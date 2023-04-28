@@ -403,6 +403,9 @@ const theme = createTheme({
       },
     },
     MuiTab: {
+      defaultProps: {
+        disableRipple: true,
+      },
       styleOverrides: {
         root: {
           minWidth: 0,
