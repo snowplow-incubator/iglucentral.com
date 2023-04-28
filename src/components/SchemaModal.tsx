@@ -144,13 +144,6 @@ const SchemaModal: FC<SchemaModalProps> = ({
 }) => {
   const [tab, setTab] = useState(0);
 
-  const schema = {
-    $schema: rawSchema?.$schema,
-    self: rawSchema?.self,
-    type: rawSchema?.type,
-    properties: rawSchema?.properties,
-  };
-
   return (
     <StyledDialog
       onClose={onClose}
@@ -211,7 +204,7 @@ const SchemaModal: FC<SchemaModalProps> = ({
                     </Box>
                     <CodePanel
                       language={"json"}
-                      code={JSON.stringify(schema, null, 2)}
+                      code={JSON.stringify(rawSchema, null, 2)}
                     />
                   </TabPanel>
 
