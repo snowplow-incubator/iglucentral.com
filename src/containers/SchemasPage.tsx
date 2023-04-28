@@ -7,17 +7,13 @@ import SchemaList from "../components/SchemaList";
 import Loader from "../components/Loader";
 
 const SchemasPage = () => {
+  const params = new URLSearchParams(window.location.search);
   const [schemas, setSchemas] = useState<Schema[] | undefined>(undefined);
-  const [filterText, setFilterText] = useState("");
+  const [filterText, setFilterText] = useState(params.get("q") || "");
   useEffect(() => {
     getSchemas()
       .then((schemas) => setSchemas(schemas))
       .catch(() => setSchemas([]));
-  }, []);
-
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    setFilterText(params.get("q") || "");
   }, []);
 
   return (
