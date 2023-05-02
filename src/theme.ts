@@ -455,6 +455,20 @@ const theme = createTheme({
         },
       },
     },
+    MuiTooltip: {
+      styleOverrides: {
+        tooltip: {
+          fontSize: "16px",
+          backgroundColor: "#344054",
+          borderRadius: "8px",
+          padding: "14px 16px",
+          boxShadow: "0px 0px 4px 0px rgba(0, 0, 0, 0.5)",
+        },
+        arrow: {
+          color: "#344054",
+        },
+      },
+    },
   },
 });
 
