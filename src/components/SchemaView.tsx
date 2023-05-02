@@ -18,7 +18,7 @@ const SchemaView: FC<SchemaViewProps> = ({ rawSchema }) => {
     <Box>
       <Box mb={2} display={"flex"} alignItems={"center"} columnGap={1}>
         <Typography variant="h3semibold">JSON Schema</Typography>
-        <Copy onClick={handleOnCopy} text={schemaText}>
+        <Copy onCopy={handleOnCopy} text={schemaText}>
           [Copy schema to clipboard]
         </Copy>
       </Box>
