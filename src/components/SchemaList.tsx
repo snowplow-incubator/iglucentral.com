@@ -17,7 +17,10 @@ import { SearchIcon } from "./icons";
 const DEFAULT_NUMBER_TO_RENDER = 50;
 const PAGE_SIZE = 50;
 
-const SchemaTable: FC<{ schemas: Schema[] }> = ({ schemas }) => (
+const SchemaTable: FC<{
+  schemas: Schema[];
+  onSelectSchema: (schema: Schema) => void;
+}> = ({ schemas, onSelectSchema }) => (
   <Table
     sx={{
       maxWidth: "100%",
@@ -47,7 +50,11 @@ const SchemaTable: FC<{ schemas: Schema[] }> = ({ schemas }) => (
         <SchemaEmptyRow />
       ) : (
         schemas.map((s) => (
-          <SchemaRow key={`${s.fullName}${s.version}`} schema={s} />
+          <SchemaRow
+            key={`${s.fullName}${s.version}`}
+            schema={s}
+            onSelectSchema={onSelectSchema}
+          />
         ))
       )}
     </TableBody>
@@ -60,11 +67,13 @@ type SchemaListProps = {
   schemas: Schema[];
   filterText: string;
   onFilterTextChanged: (filterText: string) => void;
+  onSelectSchema: (schema: Schema) => void;
 };
 const SchemaList: FC<SchemaListProps> = ({
   schemas,
   filterText,
   onFilterTextChanged,
+  onSelectSchema,
 }) => {
   const [filter] = useDebounce(filterText, 200);
   const [renderCount, setRenderCount] = useState(DEFAULT_NUMBER_TO_RENDER);
@@ -186,7 +195,10 @@ const SchemaList: FC<SchemaListProps> = ({
         >
           Schema list
         </Typography>
-        <MemoizedSchemaTable schemas={slicedSchemas} />
+        <MemoizedSchemaTable
+          schemas={slicedSchemas}
+          onSelectSchema={onSelectSchema}
+        />
       </Box>
       {filteredSchemas.length > renderCount && (
         <Box

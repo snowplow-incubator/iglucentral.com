@@ -7,11 +7,13 @@ const Copy = ({
   loading = false,
   children,
   onCopy,
+  copyNotification = "✔ Copied",
   ...props
 }: React.PropsWithChildren<{
   text: string;
   loading?: boolean;
   onCopy?: () => void;
+  copyNotification?: string;
 }> &
   ButtonProps) => {
   const [open, setOpen] = useState(false);
@@ -31,7 +33,7 @@ const Copy = ({
   return (
     <CopyToClipboard text={text} onCopy={onCopyPressed}>
       <Tooltip
-        title="✔ Copied"
+        title={copyNotification}
         open={open}
         leaveDelay={1000}
         arrow

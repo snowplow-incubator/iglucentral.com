@@ -24,6 +24,7 @@ describe("Schema List", () => {
         vendor: "com.adjust",
         version: "1-0-0",
         type: "jsonschema",
+        fullPath: "",
       },
       {
         fullName: "com.amazon.aws.cloudfront/wd_access_log",
@@ -31,6 +32,7 @@ describe("Schema List", () => {
         type: "jsonschema",
         vendor: "com.amazon.aws.cloudfront",
         version: "1-0-0",
+        fullPath: "",
       },
       {
         fullName: "com.amazon.aws.cloudfront/wd_access_log",
@@ -38,6 +40,7 @@ describe("Schema List", () => {
         type: "jsonschema",
         vendor: "com.amazon.aws.cloudfront",
         version: "1-0-1",
+        fullPath: "",
       },
       {
         fullName: "com.amazon.aws.lambda/s3_notification_event",
@@ -45,6 +48,7 @@ describe("Schema List", () => {
         type: "jsonschema",
         vendor: "com.amazon.aws.lambda",
         version: "1-0-0",
+        fullPath: "",
       },
     ],
     filterText: "",
@@ -58,7 +62,7 @@ describe("Schema List", () => {
   it("should not explode on render", () => {
     render(
       <MuiThemeProvider theme={createTheme(theme)}>
-        <SchemaList {...defaultProps} />
+        <SchemaList {...defaultProps} onSelectSchema={jest.fn()} />
       </MuiThemeProvider>
     );
 
@@ -70,7 +74,7 @@ describe("Schema List", () => {
   it("should render correctly given no schemas", () => {
     render(
       <MuiThemeProvider theme={createTheme(theme)}>
-        <SchemaList {...defaultProps} schemas={[]} />
+        <SchemaList {...defaultProps} schemas={[]} onSelectSchema={jest.fn()} />
       </MuiThemeProvider>
     );
 
@@ -80,7 +84,11 @@ describe("Schema List", () => {
   it("should render filtered schemas", () => {
     render(
       <MuiThemeProvider theme={createTheme(theme)}>
-        <SchemaList {...defaultProps} filterText="wd_access_log" />
+        <SchemaList
+          {...defaultProps}
+          filterText="wd_access_log"
+          onSelectSchema={jest.fn()}
+        />
       </MuiThemeProvider>
     );
 
@@ -91,7 +99,11 @@ describe("Schema List", () => {
   it("should render correctly if no schemas match filter text", () => {
     render(
       <MuiThemeProvider theme={createTheme(theme)}>
-        <SchemaList {...defaultProps} filterText="name_not_in_list" />
+        <SchemaList
+          {...defaultProps}
+          filterText="name_not_in_list"
+          onSelectSchema={jest.fn()}
+        />
       </MuiThemeProvider>
     );
 
