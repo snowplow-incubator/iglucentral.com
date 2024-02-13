@@ -1,5 +1,6 @@
 export type Schema = {
   fullName: string;
+  fullPath: string;
   name: string;
   vendor: string;
   version: string;

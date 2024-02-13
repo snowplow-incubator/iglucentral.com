@@ -1,8 +1,6 @@
 import { Schema } from "./types";
 
-export const getSchemas = async () => {
-  //make request to /schemas setup proxy to fix in dev
-  //iglucentral.com/schemas
+export const getSchemas = async (): Promise<Array<Schema>> => {
   const res = await fetch("/schemas");
   const j = await res.json();
   const schemas = j
@@ -16,6 +14,7 @@ export const getSchemas = async () => {
         vendor,
         type,
         version,
+        fullPath: schemaPath,
       };
       return schema;
     })
@@ -36,3 +35,6 @@ export const getSchema = async (
   const j = await res.json();
   return j;
 };
+
+export const generateShareLink = ({ fullPath }: Schema) =>
+  `${window.location.origin}?dl=${fullPath}`;

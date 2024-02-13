@@ -1,4 +1,4 @@
-import { FC, PropsWithChildren, useState } from "react";
+import { FC, PropsWithChildren } from "react";
 import {
   Box,
   Link,
@@ -8,12 +8,13 @@ import {
   TableHead,
   Alert,
   AlertTitle,
+  Button,
 } from "@mui/material";
-import { Schema, SelfDescribingSchema } from "../data/types";
-import { ExternalLinkIcon, EyeIcon } from "./icons";
+import { Schema } from "../data/types";
+import { ExternalLinkIcon, EyeIcon, ShareIcon } from "./icons";
 import { useTrackInteraction } from "./Snowplow";
-import SchemaModal from "./SchemaModal";
-import { getSchema } from "../data/schemas";
+import Copy from "./Copy";
+import { generateShareLink } from "../data/schemas";
 
 export const SchemaHeaderRow = () => (
   <TableHead
@@ -29,7 +30,7 @@ export const SchemaHeaderRow = () => (
       <TableCell>Name</TableCell>
       <TableCell>Vendor</TableCell>
       <TableCell>Version</TableCell>
-      <TableCell>View</TableCell>
+      <TableCell>Actions</TableCell>
     </TableRow>
   </TableHead>
 );
@@ -107,33 +108,11 @@ const SchemaCell: FC<PropsWithChildren<{ label: string }>> = ({
 
 type SchemaRowProps = {
   schema: Schema;
+  onSelectSchema: (schema: Schema) => void;
 };
 
-const SchemaRow: FC<SchemaRowProps> = ({ schema }) => {
+const SchemaRow: FC<SchemaRowProps> = ({ schema, onSelectSchema }) => {
   const trackInteraction = useTrackInteraction();
-  const [schemaModalOpen, setSchemaModalOpen] = useState(false);
-  const [rawSchema, setRawSchema] = useState<SelfDescribingSchema | null>(null);
-  const [loading, setLoading] = useState(false);
-
-  const handleViewSchema = () => {
-    setLoading(true);
-    setSchemaModalOpen(true);
-    getSchema(schema.fullName, schema.type, schema.version)
-      .then((rawSchemas) => setRawSchema(rawSchemas))
-      .then(() => setLoading(false))
-      .catch(() => {
-        setRawSchema(null);
-        setLoading(false);
-      });
-  };
-
-  const handleClose = () => {
-    setSchemaModalOpen(false);
-    setTimeout(() => {
-      setRawSchema(null);
-    }, 1000);
-  };
-
   return (
     <>
       <TableRow
@@ -146,7 +125,10 @@ const SchemaRow: FC<SchemaRowProps> = ({ schema }) => {
         }}
       >
         <SchemaCell label={"Name"}>
-          <Link sx={{ cursor: "pointer" }} onClick={handleViewSchema}>
+          <Link
+            sx={{ cursor: "pointer" }}
+            onClick={() => onSelectSchema(schema)}
+          >
             <Typography variant={"body1"}>{schema.name}</Typography>
           </Link>
         </SchemaCell>
@@ -169,41 +151,38 @@ const SchemaRow: FC<SchemaRowProps> = ({ schema }) => {
         </SchemaCell>
 
         <SchemaCell label={"View"}>
-          <Box display={"flex"} sx={{ columnGap: 3 }}>
-            <Link
+          <Box display={"flex"} sx={{ columnGap: 1 }}>
+            <Button
+              startIcon={<ExternalLinkIcon fontSize="medium" />}
               href={`https://github.com/snowplow/iglu-central/tree/master/schemas/${schema.fullName}/${schema.type}/${schema.version}`}
               target={"_blank"}
               onClick={() =>
                 trackInteraction("click", "link", `${schema.name}-github`)
               }
             >
-              <Box display={"flex"} alignItems={"center"} sx={{ columnGap: 1 }}>
-                <ExternalLinkIcon fontSize="medium" />
-                Github
-              </Box>
-            </Link>
-            <Link
+              Github
+            </Button>
+            <Button
+              startIcon={<EyeIcon fontSize="medium" />}
               onClick={() => {
                 trackInteraction("click", "link", `${schema.name}-view`);
-                handleViewSchema();
+                onSelectSchema(schema);
               }}
-              sx={{ cursor: "pointer" }}
             >
-              <Box display={"flex"} alignItems={"center"} sx={{ columnGap: 1 }}>
-                <EyeIcon fontSize="medium" />
-                View
-              </Box>
-            </Link>
+              View
+            </Button>
+            <Copy
+              text={generateShareLink(schema)}
+              startIcon={<ShareIcon fontSize="medium" />}
+              onCopy={() => {
+                trackInteraction("click", "link", `${schema.name}-share`);
+              }}
+            >
+              Share
+            </Copy>
           </Box>
         </SchemaCell>
       </TableRow>
-      <SchemaModal
-        isOpen={schemaModalOpen}
-        title={schema.name}
-        rawSchema={rawSchema}
-        onClose={handleClose}
-        loading={loading}
-      />
     </>
   );
 };

@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import {
   Alert,
   AlertTitle,
@@ -15,16 +15,14 @@ import {
 } from "@mui/material";
 import { CloseIcon } from "./icons";
 import ModalTransition from "./ModalTransition";
-import { SelfDescribingSchema } from "../data/types";
+import { Schema } from "../data/types";
 import GeneralInformation from "./GeneralInformation";
 import SchemaView from "./SchemaView";
+import { getSchema } from "../data/schemas";
 
 type SchemaModalProps = {
-  isOpen: boolean;
-  title: string;
-  rawSchema: SelfDescribingSchema | null;
-  onClose?: (e?: any, r?: any) => void;
-  loading: boolean;
+  onClose: () => void;
+  schema: Schema | undefined;
 };
 
 interface TabPanelProps {
@@ -135,28 +133,33 @@ const LoadingSchema: FC<LoadingSchemaProps> = ({ title }) => (
   </>
 );
 
-const SchemaModal: FC<SchemaModalProps> = ({
-  isOpen = false,
-  title,
-  rawSchema,
-  onClose,
-  loading,
-}) => {
+const SchemaModal: FC<SchemaModalProps> = ({ schema, onClose }) => {
   const [tab, setTab] = useState(0);
+  const [rawSchema, setRawSchema] = useState<any>();
+  const [error, setError] = useState<false>();
+  useEffect(() => {
+    setError(false);
+    setRawSchema(undefined);
+    if (schema) {
+      getSchema(schema.fullName, schema.type, schema.version).then((s) => {
+        setRawSchema(s);
+      });
+    }
+  }, [schema]);
 
   return (
     <StyledDialog
       onClose={onClose}
-      open={isOpen}
+      open={!!schema}
       TransitionComponent={ModalTransition}
       fullWidth
       maxWidth="lg"
     >
-      {loading ? (
-        <LoadingSchema title={title} />
+      {!rawSchema || !schema ? (
+        <LoadingSchema title={"Loading"} />
       ) : (
         <>
-          {rawSchema ? (
+          {!error ? (
             <>
               <DialogTitle>
                 <Box
@@ -175,7 +178,7 @@ const SchemaModal: FC<SchemaModalProps> = ({
                         variant={"h4semibold"}
                         gutterBottom={Boolean(rawSchema.description || false)}
                       >
-                        {title}
+                        {schema.name}
                       </Typography>
                       {rawSchema.description ? (
                         <Typography component="div">
@@ -197,7 +200,7 @@ const SchemaModal: FC<SchemaModalProps> = ({
                     <Tab label="General Information" value={1} />
                   </Tabs>
                   <TabPanel value={tab} index={0}>
-                    <SchemaView rawSchema={rawSchema} />
+                    <SchemaView rawSchema={rawSchema} schemaDetails={schema} />
                   </TabPanel>
 
                   <TabPanel value={tab} index={1}>
@@ -221,7 +224,9 @@ const SchemaModal: FC<SchemaModalProps> = ({
                       flexDirection={"column"}
                       justifyContent={"center"}
                     >
-                      <Typography variant={"h4semibold"}>{title}</Typography>
+                      <Typography variant={"h4semibold"}>
+                        Error fetching schema
+                      </Typography>
                     </Box>
                   </Box>
 
